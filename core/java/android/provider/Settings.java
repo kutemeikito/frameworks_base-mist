@@ -7224,6 +7224,18 @@ public final class Settings {
         public static final String LOCK_GESTURE_STATUS = "lock_gesture_status";
 
         /**
+         * Whether to vibrate on succesful fingerprint authentication
+         * @hide
+         */
+        public static final String FP_SUCCESS_VIBRATE = "fp_success_vibrate";
+
+        /**
+         * Whether to vibrate on unsuccesful fingerprint authentication
+         * @hide
+         */
+        public static final String FP_ERROR_VIBRATE = "fp_error_vibrate";
+
+        /**
          * @hide
          */
         public static final String QS_PANEL_TILE_HAPTIC = "qs_panel_tile_haptic";
