@@ -17,6 +17,7 @@
 package com.android.internal.util.mist;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraManager;
@@ -25,6 +26,12 @@ import android.net.Network;
 import android.net.NetworkCapabilities;
 
 public class MistUtils {
+import java.util.Locale;
+
+    public static boolean isChineseLanguage() {
+       return Resources.getSystem().getConfiguration().locale.getLanguage().startsWith(
+               Locale.CHINESE.getLanguage());
+    }
 
     public static boolean deviceSupportsFlashLight(Context context) {
         CameraManager cameraManager = (CameraManager) context.getSystemService(
