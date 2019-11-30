@@ -181,7 +181,7 @@ public class CompassTile extends QSTileImpl<BooleanState> implements SensorEvent
 
     @Override
     public int getMetricsCategory() {
-        return MetricsEvent.CHERISH_SETTINGS;
+        return MetricsEvent.MIST_SETTINGS;
     }
 
     @Override
