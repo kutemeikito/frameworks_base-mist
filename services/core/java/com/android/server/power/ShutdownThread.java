@@ -45,19 +45,23 @@ import android.os.Trace;
 import android.os.UserHandle;
 import android.os.UserManager;
 import android.os.Vibrator;
+import android.os.vibrator.persistence.VibrationXmlParser;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.util.Log;
 import android.util.Slog;
 import android.util.TimingsTraceLog;
 import android.view.WindowManager;
 
+import com.android.internal.annotations.VisibleForTesting;
 import com.android.server.LocalServices;
 import com.android.server.RescueParty;
 import com.android.server.statusbar.StatusBarManagerInternal;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
@@ -80,7 +84,7 @@ public final class ShutdownThread extends Thread {
     private static final int MOUNT_SERVICE_STOP_PERCENT = 20;
 
     // length of vibration before shutting down
-    private static final int SHUTDOWN_VIBRATE_MS = 500;
+    @VisibleForTesting static final int DEFAULT_SHUTDOWN_VIBRATE_MS = 500;
 
     // state tracking
     private static final Object sIsStartedGuard = new Object();
@@ -124,6 +128,8 @@ public final class ShutdownThread extends Thread {
     private static String METRIC_RADIO = "shutdown_radio";
     private static String METRIC_SHUTDOWN_TIME_START = "begin_shutdown";
 
+    private final Injector mInjector;
+
     private final Object mActionDoneSync = new Object();
     private boolean mActionDone;
     private Context mContext;
@@ -136,6 +142,12 @@ public final class ShutdownThread extends Thread {
     private ProgressDialog mProgressDialog;
 
     private ShutdownThread() {
+        this(new Injector());
+    }
+
+    @VisibleForTesting
+    ShutdownThread(Injector injector) {
+        mInjector = injector;
     }
 
     /**
@@ -704,19 +716,10 @@ public final class ShutdownThread extends Thread {
             PowerManagerService.lowLevelReboot(reason);
             Log.e(TAG, "Reboot failed, will attempt shutdown instead");
             reason = null;
-        } else if (SHUTDOWN_VIBRATE_MS > 0 && context != null) {
+        } else if (context != null) {
             // vibrate before shutting down
-            Vibrator vibrator = new SystemVibrator(context);
             try {
-                if (vibrator.hasVibrator()) {
-                    vibrator.vibrate(SHUTDOWN_VIBRATE_MS, VIBRATION_ATTRIBUTES);
-                    // vibrator is asynchronous so we need to wait to avoid shutting down too soon.
-                    try {
-                        Thread.sleep(SHUTDOWN_VIBRATE_MS);
-                    } catch (InterruptedException unused) {
-                        // this is not critical and does not require logging
-                    }
-                }
+                sInstance.playShutdownVibration(context);
             } catch (Exception e) {
                 // Failure to vibrate shouldn't interrupt shutdown.  Just log it.
                 Log.w(TAG, "Failed to vibrate during shutdown.", e);
@@ -726,6 +729,31 @@ public final class ShutdownThread extends Thread {
         // Shutdown power
         Log.i(TAG, "Performing low-level shutdown...");
         PowerManagerService.lowLevelShutdown(reason);
+    }
+
+    /**
+     * Plays a vibration for shutdown. Along with playing a shutdown vibration, this method also
+     * sleeps the current Thread for some time, to allow the vibration to finish before the device
+     * shuts down.
+     */
+    @VisibleForTesting // For testing vibrations without shutting down device
+    void playShutdownVibration(Context context) {
+        Vibrator vibrator = mInjector.getVibrator(context);
+        if (!vibrator.hasVibrator()) {
+            return;
+        }
+
+        VibrationEffect vibrationEffect = getValidShutdownVibration(context, vibrator);
+        vibrator.vibrate(
+                vibrationEffect,
+                VibrationAttributes.createForUsage(VibrationAttributes.USAGE_TOUCH));
+
+        // vibrator is asynchronous so we have to wait to avoid shutting down too soon.
+        long vibrationDuration = vibrationEffect.getDuration();
+        // A negative vibration duration may indicate a vibration effect whose duration is not
+        // known by the system (e.g. pre-baked effects). In that case, use the default shutdown
+        // vibration duration.
+        mInjector.sleep(vibrationDuration < 0 ? DEFAULT_SHUTDOWN_VIBRATE_MS : vibrationDuration);
     }
 
     private static void saveMetrics(boolean reboot, String reason) {
@@ -815,8 +843,6 @@ public final class ShutdownThread extends Thread {
             }
         }
     }
-<<<<<<< HEAD
-=======
 
     /**
      * Provides a {@link VibrationEffect} to be used for shutdown.
@@ -834,10 +860,9 @@ public final class ShutdownThread extends Thread {
      */
     private VibrationEffect getValidShutdownVibration(Context context, Vibrator vibrator) {
         VibrationEffect parsedEffect = parseVibrationEffectFromFile(
-                mInjector.getDefaultShutdownVibrationEffectFilePath(context),
-                vibrator);
+                mInjector.getDefaultShutdownVibrationEffectFilePath(context));
 
-        if (parsedEffect == null) {
+        if (parsedEffect == null || !vibrator.areVibrationFeaturesSupported(parsedEffect)) {
             return createDefaultVibrationEffect();
         }
 
@@ -853,12 +878,11 @@ public final class ShutdownThread extends Thread {
         return parsedEffect;
     }
 
-    private static VibrationEffect parseVibrationEffectFromFile(
-            String filePath, Vibrator vibrator) {
+    private static VibrationEffect parseVibrationEffectFromFile(String filePath) {
         if (!TextUtils.isEmpty(filePath)) {
             try {
-                return VibrationXmlParser.parseDocument(new FileReader(filePath)).resolve(vibrator);
-            } catch (Exception e) {
+                return VibrationXmlParser.parse(new FileReader(filePath));
+            } catch (IOException e) {
                 Log.e(TAG, "Error parsing default shutdown vibration effect.", e);
             }
         }
@@ -890,5 +914,4 @@ public final class ShutdownThread extends Thread {
                     com.android.internal.R.string.config_defaultShutdownVibrationFile);
         }
     }
->>>>>>> a2afada01c28 (base: Follow Dark/Light theme for Safe Mode dialog)
 }
