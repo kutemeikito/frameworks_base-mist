@@ -7243,6 +7243,11 @@ public final class Settings {
         /**
          * @hide
          */
+        public static final String UDFPS_ICON = "udfps_icon";
+
+        /**
+         * @hide
+         */
         public static final String QS_PANEL_TILE_HAPTIC = "qs_panel_tile_haptic";
 
         /**
