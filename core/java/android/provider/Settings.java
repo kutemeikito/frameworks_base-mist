@@ -7224,6 +7224,26 @@ public final class Settings {
         public static final String LOCK_GESTURE_STATUS = "lock_gesture_status";
 
         /**
+         * @hide
+         */
+        public static final String QS_TILE_VERTICAL_LAYOUT = "qs_tile_vertical_layout";
+
+        /**
+         * @hide
+         */
+        public static final String QS_TILE_LABEL_HIDE = "qs_tile_label_hide";
+
+        /**
+         * @hide
+         */
+        public static final String QS_LAYOUT_COLUMNS_LANDSCAPE = "qs_layout_columns_landscape";
+
+        /**
+         * @hide
+         */
+        public static final String QS_LAYOUT_COLUMNS = "qs_layout_columns";
+
+        /**
          * Whether to vibrate on succesful fingerprint authentication
          * @hide
          */
