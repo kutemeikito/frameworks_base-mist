@@ -30,7 +30,6 @@ import android.content.IIntentReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManagerInternal;
-import android.media.AudioAttributes;
 import android.os.Bundle;
 import android.os.FileUtils;
 import android.os.Handler;
@@ -183,6 +182,11 @@ public final class ShutdownThread extends Thread {
                         ? com.android.internal.R.string.shutdown_confirm_question
                         : com.android.internal.R.string.shutdown_confirm);
 
+        boolean isNightMode = (context.getResources().getConfiguration().uiMode
+                & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
+        int themeResId = isNightMode ? android.R.style.Theme_DeviceDefault_Dialog_Alert :
+                android.R.style.Theme_DeviceDefault_Light_Dialog_Alert;
+
         if (DEBUG) {
             Log.d(TAG, "Notifying thread to start shutdown longPressBehavior=" + longPressBehavior);
         }
@@ -192,7 +196,7 @@ public final class ShutdownThread extends Thread {
             if (sConfirmDialog != null) {
                 sConfirmDialog.dismiss();
             }
-            sConfirmDialog = new AlertDialog.Builder(context)
+            sConfirmDialog = new AlertDialog.Builder(context, themeResId)
                     .setTitle(mRebootSafeMode
                             ? com.android.internal.R.string.reboot_safemode_title
                             : com.android.internal.R.string.power_off)
@@ -810,4 +814,80 @@ public final class ShutdownThread extends Thread {
             }
         }
     }
+<<<<<<< HEAD
+=======
+
+    /**
+     * Provides a {@link VibrationEffect} to be used for shutdown.
+     *
+     * <p>The vibration to be played is derived from the shutdown vibration file (which the device
+     * should specify at `com.android.internal.R.string.config_defaultShutdownVibrationFile`). A
+     * fallback vibration maybe used in one of these conditions:
+     *      <ul>
+     *          <li>A vibration file has not been specified, or if the specified file does not exist
+     *          <li>If the content of the file does not represent a valid serialization of a
+     *              {@link VibrationEffect}
+     *          <li>If the {@link VibrationEffect} specified in the file is not suitable for
+     *              a shutdown vibration (such as indefinite vibrations)
+     *      </ul>
+     */
+    private VibrationEffect getValidShutdownVibration(Context context, Vibrator vibrator) {
+        VibrationEffect parsedEffect = parseVibrationEffectFromFile(
+                mInjector.getDefaultShutdownVibrationEffectFilePath(context),
+                vibrator);
+
+        if (parsedEffect == null) {
+            return createDefaultVibrationEffect();
+        }
+
+        long parsedEffectDuration = parsedEffect.getDuration();
+        if (parsedEffectDuration == Long.MAX_VALUE) {
+            // This means that the effect does not have a defined end.
+            // Since we don't want to vibrate forever while trying to shutdown, we ignore this
+            // parsed effect and use the default one instead.
+            Log.w(TAG, "The parsed shutdown vibration is indefinite.");
+            return createDefaultVibrationEffect();
+        }
+
+        return parsedEffect;
+    }
+
+    private static VibrationEffect parseVibrationEffectFromFile(
+            String filePath, Vibrator vibrator) {
+        if (!TextUtils.isEmpty(filePath)) {
+            try {
+                return VibrationXmlParser.parseDocument(new FileReader(filePath)).resolve(vibrator);
+            } catch (Exception e) {
+                Log.e(TAG, "Error parsing default shutdown vibration effect.", e);
+            }
+        }
+        return null;
+    }
+
+    private static VibrationEffect createDefaultVibrationEffect() {
+        return VibrationEffect.createOneShot(
+                DEFAULT_SHUTDOWN_VIBRATE_MS, VibrationEffect.DEFAULT_AMPLITUDE);
+    }
+
+    /** Utility class to inject instances, for easy testing. */
+    @VisibleForTesting
+    static class Injector {
+        public Vibrator getVibrator(Context context) {
+            return new SystemVibrator(context);
+        }
+
+        public void sleep(long durationMs) {
+            try {
+                Thread.sleep(durationMs);
+            } catch (InterruptedException unused) {
+                // this is not critical and does not require logging.
+            }
+        }
+
+        public String getDefaultShutdownVibrationEffectFilePath(Context context) {
+            return context.getResources().getString(
+                    com.android.internal.R.string.config_defaultShutdownVibrationFile);
+        }
+    }
+>>>>>>> a2afada01c28 (base: Follow Dark/Light theme for Safe Mode dialog)
 }
