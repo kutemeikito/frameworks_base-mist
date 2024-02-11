@@ -1387,6 +1387,9 @@ public class EdgeBackGestureHandler implements PluginListener<NavigationEdgeBack
             case 15: // Partial Screenshot
                 MistUtils.takeScreenshot(false);
                 break;
+            case 16: // Recents
+                MistUtils.sendKeycode(KeyEvent.KEYCODE_APP_SWITCH);
+                break;
         }
     }
 
