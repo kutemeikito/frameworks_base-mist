@@ -38,7 +38,7 @@ import java.io.InputStream;
 import java.util.Calendar;
 
 import com.android.internal.util.mist.ImageHelper;
-import com.android.systemui.R;
+import com.android.systemui.res.R;
 
 public class FileHeaderProvider implements
         StatusBarHeaderMachine.IStatusBarHeaderProvider {
