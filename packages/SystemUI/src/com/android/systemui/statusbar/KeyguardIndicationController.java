@@ -122,6 +122,7 @@ import com.android.systemui.util.AlarmTimeout;
 import com.android.systemui.util.concurrency.DelayableExecutor;
 import com.android.systemui.util.wakelock.SettableWakeLock;
 import com.android.systemui.util.wakelock.WakeLock;
+import com.android.systemui.util.SystemUtils;
 
 import java.io.PrintWriter;
 import java.text.NumberFormat;
@@ -223,6 +224,7 @@ public class KeyguardIndicationController {
     private final Set<Integer> mCoExFaceAcquisitionMsgIdsToShow;
     private final FaceHelpMessageDeferral mFaceAcquiredMessageDeferral;
     private boolean mInited;
+    private SystemUtils mSystemUtils;
 
     private int mCurrentDivider;
 
@@ -390,6 +392,7 @@ public class KeyguardIndicationController {
                 com.android.internal.R.bool.config_hasWarpCharger);
         mHasVoocCharger = mContext.getResources().getBoolean(
                 com.android.internal.R.bool.config_hasVoocCharger);
+        mSystemUtils = new SystemUtils(mContext);
     }
 
     /** Call this after construction to finish setting up the instance. */
@@ -1164,6 +1167,8 @@ public class KeyguardIndicationController {
         }
 
         final boolean hasChargingTime = mChargingTimeRemaining > 0;
+        boolean mAdaptiveCharging = Settings.System.getIntForUser(mContext.getContentResolver(),
+                                "adaptive_charging_enabled", 0, UserHandle.USER_CURRENT) == 1;
         if (mPowerPluggedInWired) {
             switch (mChargingSpeed) {
                 case BatteryStatus.CHARGING_OEM:
@@ -1213,6 +1218,12 @@ public class KeyguardIndicationController {
             chargingId = hasChargingTime
                     ? R.string.keyguard_indication_charging_time
                     : R.string.keyguard_plugged_in;
+        }
+
+        if (mAdaptiveCharging) {
+           chargingId = hasChargingTime
+                            ? R.string.keyguard_indication_adaptive_charging_time
+                            : R.string.keyguard_plugged_in_adaptive_charging;
         }
 
         String batteryInfo = "";
@@ -1388,6 +1399,7 @@ public class KeyguardIndicationController {
         public void onRefreshBatteryInfo(BatteryStatus status) {
             boolean isChargingOrFull = status.status == BatteryManager.BATTERY_STATUS_CHARGING
                     || status.isCharged();
+            boolean isCharging = status.status == BatteryManager.BATTERY_STATUS_CHARGING;
             boolean wasPluggedIn = mPowerPluggedIn;
             mPowerPluggedInWired = status.isPluggedInWired() && isChargingOrFull;
             mPowerPluggedInWireless = status.isPluggedInWireless() && isChargingOrFull;
@@ -1423,6 +1435,7 @@ public class KeyguardIndicationController {
             mKeyguardLogger.logRefreshBatteryInfo(isChargingOrFull, mPowerPluggedIn, mBatteryLevel,
                     mBatteryDefender);
             updateDeviceEntryIndication(!wasPluggedIn && mPowerPluggedInWired);
+            mSystemUtils.setAdaptiveChargingStatus(isCharging);
         }
 
         @Override
