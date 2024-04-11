@@ -155,6 +155,8 @@ import com.android.systemui.volume.ui.navigation.VolumeNavigator;
 
 import dagger.Lazy;
 
+import com.android.internal.util.android.VibrationUtils;
+
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -3179,7 +3181,9 @@ public class VolumeDialogImpl implements VolumeDialog, Dumpable,
                             userLevel);
                 }
             }
-            mVolumeUtils.playSoundForStreamType(mRow.stream);
+            int vibrateIntensity = Settings.System.getInt(mContext.getContentResolver(),
+                        Settings.System.VOLUME_SLIDER_HAPTICS_INTENSITY, 1);
+            VibrationUtils.triggerVibration(mContext, vibrateIntensity);
         }
 
         @Override
@@ -3218,6 +3222,7 @@ public class VolumeDialogImpl implements VolumeDialog, Dumpable,
                 mHandler.sendMessageDelayed(mHandler.obtainMessage(H.RECHECK, mRow),
                         USER_ATTEMPT_GRACE_PERIOD);
             }
+            mVolumeUtils.playSoundForStreamType(mRow.stream);
         }
     }
 
