@@ -519,20 +519,12 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
                 String chipStyleUri = "sb_date_bg" + mShowSBClockBg;
                 int resId = getContext().getResources().getIdentifier(chipStyleUri, "drawable", getContext().getPackageName());
                 int chipTopBottomPadding = getResources().getDimensionPixelSize(R.dimen.status_bar_clock_chip_tb_padding);
-                int chipLeftPadding = getResources().getDimensionPixelSize(R.dimen.status_bar_clock_chip_left_padding);
-                int chipRightPadding = getResources().getDimensionPixelSize(R.dimen.status_bar_clock_chip_right_padding);
-                clockView.setPadding(chipLeftPadding, chipTopBottomPadding, chipRightPadding, chipTopBottomPadding);
+                int chipLeftRightPadding = getResources().getDimensionPixelSize(R.dimen.status_bar_clock_chip_lr_padding);
+                clockView.setPadding(chipLeftRightPadding, chipTopBottomPadding, chipLeftRightPadding, chipTopBottomPadding);
                 layoutParams.setMarginStart(mClockPaddingStartArray[i]);
                 layoutParams.setMarginEnd(mClockPaddingEndArray[i]);
                 if (clockView instanceof TextView) {
                     textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                }
-                if (clockView.getParent() instanceof RelativeLayout) {
-                    RelativeLayout parentLayout = (RelativeLayout) clockView.getParent();
-                    parentLayout.setGravity(Gravity.CENTER);
-                } else if (clockView.getParent() instanceof LinearLayout) {
-                    LinearLayout parentLayout = (LinearLayout) clockView.getParent();
-                    parentLayout.setGravity(Gravity.CENTER);
                 }
                 clockView.setBackgroundResource(resId);
             } else {
@@ -548,19 +540,6 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
                     } else if (textView.getId() == R.id.clock_right) {
                         textView.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_END);
                     }
-                }
-                if (clockView.getParent() instanceof RelativeLayout) {
-                    RelativeLayout parentLayout = (RelativeLayout) clockView.getParent();
-                    if (parentLayout.getId() == R.id.left_clock_layout) {
-                        parentLayout.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
-                    } else if (parentLayout.getId() == R.id.right_clock_layout) {
-                        parentLayout.setGravity(Gravity.END | Gravity.CENTER_VERTICAL);
-                    } else {
-                        parentLayout.setGravity(Gravity.CENTER_VERTICAL);
-                    }
-                } else if (clockView.getParent() instanceof LinearLayout) {
-                    LinearLayout parentLayout = (LinearLayout) clockView.getParent();
-                    parentLayout.setGravity(Gravity.CENTER_VERTICAL);
                 }
             }
             clockView.setLayoutParams(layoutParams);
