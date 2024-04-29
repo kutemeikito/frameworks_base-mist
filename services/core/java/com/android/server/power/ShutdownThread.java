@@ -30,6 +30,7 @@ import android.content.IIntentReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManagerInternal;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.FileUtils;
 import android.os.Handler;
