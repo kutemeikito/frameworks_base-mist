@@ -478,7 +478,11 @@ public class ThemeOverlayController implements CoreStartable, Dumpable, TunerSer
         mActivityManager = activityManager;
         mTunerService = tunerService;
         dumpManager.registerDumpable(TAG, this);
+<<<<<<< HEAD
         mThemeController = new MistThemeController(mContext.getContentResolver(), mBgHandler);
+=======
+        mThemeController = new EverestThemeController(mContext, mBgHandler);
+>>>>>>> 4afbd08cc1ab (SystemUI: Show a notification toast when reloading system theme)
     }
 
     @Override
