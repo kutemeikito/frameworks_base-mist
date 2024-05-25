@@ -143,7 +143,7 @@ public class AODTile extends QSTileImpl<BooleanState> {
 
     @Override
     public int getMetricsCategory() {
-        return MetricsEvent.CHERISH_SETTINGS;
+        return MetricsEvent.MIST_SETTINGS;
     }
 
     private final ContentObserver mObserver = new ContentObserver(mHandler) {

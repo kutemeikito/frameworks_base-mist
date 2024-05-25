@@ -1,31 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-     Copyright (C)2020-2024 The SuperiorOS Project
+     Copyright (C) 2020-22 The CherishOS Project
      SPDX-License-Identifier: Apache-2.0
 -->
 <resources>
+     <!-- Pocket Mode -->
+     <style name="pocket_view_title">
+          <item name="android:fontFamily">@string/config_headlineFontFamily</item>
+          <item name="android:textSize">@dimen/pocket_view_title_size</item>
+          <item name="android:textColor">#ffffff</item>
+          <item name="android:alpha">0.87</item>
+     </style>
+     <style name="pocket_view_title_cancel">
+          <item name="android:textSize">@dimen/pocket_view_title_cancel_size</item>
+          <item name="android:textColor">#ffffff</item>
+          <item name="android:alpha">0.54</item>
+     </style>
+     <style name="pocket_view_top_tag">
+          <item name="android:textSize">@dimen/pocket_view_top_tag_size</item>
+          <item name="android:textColor">#ffffff</item>
+          <item name="android:alpha">0.54</item>
+     </style>
 
-   <color name="qs_ripple_color">@android:color/system_accent1_400</color>
+     <style name="GlobalActionsAnimation">
+        <item name="windowEnterAnimation">@anim/slide_in_up</item>
+        <item name="windowExitAnimation">@anim/slide_out_down</item>
+    </style>
 
-   <color name="qs_translucent_bg">#59FFFFFF</color>
-   <color name="qs_white_bg">@android:color/system_neutral1_0</color>
-   <color name="footer_actions_bg">@android:color/system_neutral1_900</color>
+    <style name="GlobalActionsAnimationTop">
+        <item name="windowEnterAnimation">@anim/slide_in_down</item>
+        <item name="windowExitAnimation">@anim/slide_out_up</item>
+    </style>
 
-   <!-- New color style -->
-   <color name="colorAccent">@android:color/system_accent1_600</color>
-   <color name="colorAccentVariant">@android:color/system_accent3_600</color>
-   <color name="rippleAccent">@color/color_container_overlay_light</color>
-   <color name="rippleDark">#1A000000</color>
-   <color name="rippleDarker">#33000000</color>
-   <color name="holo_blue_light">@android:color/system_accent1_600</color>
-   <color name="holo_green_light">@android:color/system_accent3_600</color>
-   <color name="colorBackground">@android:color/system_neutral2_50</color>
-   <color name="colorContainer">@android:color/system_neutral2_50</color>
-   <color name="shadow">#14000000</color>
-   <color name="neumorph_outline_start">#FFBDBDBD</color>
-   <color name="neumorph_outline_end">#FFF0F0F0</color>
+    <style name="GlobalActionsAnimationEnter">
+        <item name="windowEnterAnimation">@anim/dialog_enter</item>
+        <item name="windowExitAnimation">@anim/dialog_exit</item>
+    </style>
 
-   <!-- Island notification -->
-    <color name="island_background_color_dark">@android:color/system_neutral1_800</color>
-    <color name="island_background_color_light">@android:color/system_neutral1_0</color>
+    <style name="GlobalActionsAnimationFly">
+        <item name="windowEnterAnimation">@anim/recent_enter</item>
+        <item name="windowExitAnimation">@anim/recent_exit</item>
+    </style>
+
+    <style name="GlobalActionsAnimationTn">
+        <item name="windowEnterAnimation">@anim/tn_toast_enter</item>
+        <item name="windowExitAnimation">@anim/tn_toast_exit</item>
+    </style>
+
+    <style name="GlobalActionsAnimationTranslucent">
+        <item name="windowEnterAnimation">@anim/translucent_enter</item>
+        <item name="windowExitAnimation">@anim/translucent_exit</item>
+    </style>
+
+    <style name="GlobalActionsAnimationXylon">
+        <item name="windowEnterAnimation">@anim/xylon_toast_enter</item>
+        <item name="windowExitAnimation">@anim/xylon_toast_exit</item>
+    </style>
+
+    <style name="GlobalActionsAnimationCard">
+        <item name="windowEnterAnimation">@anim/honami_toast_enter</item>
+        <item name="windowExitAnimation">@anim/honami_toast_exit</item>
+    </style>
+
+    <style name="GlobalActionsAnimationRotate">
+        <item name="windowEnterAnimation">@anim/rotate</item>
+    </style>
+
 </resources>

@@ -1,69 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-     Copyright (C)2020-2024 The SuperiorOS Project
+     Copyright (C) 2020-22 The CherishOS Project
      SPDX-License-Identifier: Apache-2.0
 -->
 <resources>
-     <!-- Pocket Mode -->
-     <style name="pocket_view_title">
-          <item name="android:fontFamily">@string/config_headlineFontFamily</item>
-          <item name="android:textSize">@dimen/pocket_view_title_size</item>
-          <item name="android:textColor">#ffffff</item>
-          <item name="android:alpha">0.87</item>
-     </style>
-     <style name="pocket_view_title_cancel">
-          <item name="android:textSize">@dimen/pocket_view_title_cancel_size</item>
-          <item name="android:textColor">#ffffff</item>
-          <item name="android:alpha">0.54</item>
-     </style>
-     <style name="pocket_view_top_tag">
-          <item name="android:textSize">@dimen/pocket_view_top_tag_size</item>
-          <item name="android:textColor">#ffffff</item>
-          <item name="android:alpha">0.54</item>
-     </style>
 
-     <style name="GlobalActionsAnimation">
-        <item name="windowEnterAnimation">@anim/slide_in_up</item>
-        <item name="windowExitAnimation">@anim/slide_out_down</item>
-    </style>
+     <!-- Maximum vertical offset of statusbar for burn-in protection -->
+     <dimen name="status_bar_offset_max_y">4dp</dimen>
 
-    <style name="GlobalActionsAnimationTop">
-        <item name="windowEnterAnimation">@anim/slide_in_down</item>
-        <item name="windowExitAnimation">@anim/slide_out_up</item>
-    </style>
+    <!-- Screen Record -->
+    <dimen name="screenrecord_dot_size">48dp</dimen>
 
-    <style name="GlobalActionsAnimationEnter">
-        <item name="windowEnterAnimation">@anim/dialog_enter</item>
-        <item name="windowExitAnimation">@anim/dialog_exit</item>
-    </style>
+    <!-- The height of the WiFi toggle layout in Internet panel -->
+    <dimen name="internet_dialog_wifi_toggle_height">56dp</dimen>
 
-    <style name="GlobalActionsAnimationFly">
-        <item name="windowEnterAnimation">@anim/recent_enter</item>
-        <item name="windowExitAnimation">@anim/recent_exit</item>
-    </style>
+    <!-- FPS Info tile -->
+    <dimen name="fps_info_text_padding">4dp</dimen>
 
-    <style name="GlobalActionsAnimationTn">
-        <item name="windowEnterAnimation">@anim/tn_toast_enter</item>
-        <item name="windowExitAnimation">@anim/tn_toast_exit</item>
-    </style>
+    <!-- Width of the battery icon in the status bar when set to circle style. -->
+    <dimen name="status_bar_battery_icon_circle_width">14.5dp</dimen>
 
-    <style name="GlobalActionsAnimationTranslucent">
-        <item name="windowEnterAnimation">@anim/translucent_enter</item>
-        <item name="windowExitAnimation">@anim/translucent_exit</item>
-    </style>
+    <!-- Width of the big battery circle icon in the status bar. -->
+    <dimen name="status_bar_battery_icon_big_circle_width">20.5dp</dimen>
 
-    <style name="GlobalActionsAnimationXylon">
-        <item name="windowEnterAnimation">@anim/xylon_toast_enter</item>
-        <item name="windowExitAnimation">@anim/xylon_toast_exit</item>
-    </style>
+    <!-- Height of the big battery circle icon in the status bar. -->
+    <dimen name="status_bar_battery_icon_big_circle_height">@dimen/status_bar_battery_icon_big_circle_width</dimen>
 
-    <style name="GlobalActionsAnimationCard">
-        <item name="windowEnterAnimation">@anim/honami_toast_enter</item>
-        <item name="windowExitAnimation">@anim/honami_toast_exit</item>
-    </style>
+    <!-- Height of the landscape battery icon in the status bar. -->
+    <dimen name="status_bar_battery_icon_height_landscape">10.5dp</dimen>
 
-    <style name="GlobalActionsAnimationRotate">
-        <item name="windowEnterAnimation">@anim/rotate</item>
-    </style>
+    <!-- Width of the landscape battery icon in the status bar. -->
+    <dimen name="status_bar_battery_icon_width_landscape">20dp</dimen>
+    <dimen name="status_bar_battery_icon_height_landscape_signal">21.0dip</dimen>
+    <dimen name="status_bar_battery_icon_width_landscape_signal">16.0dip</dimen>
+    <dimen name="status_bar_battery_icon_height_landscape_line">28.0dip</dimen>
+    <dimen name="status_bar_battery_icon_width_landscape_line">22.0dip</dimen>
+    <dimen name="status_bar_battery_icon_height_landscape_pill_musku">13dp</dimen>
+    <dimen name="status_bar_battery_icon_width_landscape_pill_musku">13dp</dimen>
+    <dimen name="status_bar_battery_icon_height_landscape_buddy">28.0dip</dimen>
+    <dimen name="status_bar_battery_icon_width_landscape_buddy">22.0dip</dimen>
+    <dimen name="status_bar_battery_icon_height_landscape_ios15">12.0dip</dimen>
+    <dimen name="status_bar_battery_icon_width_landscape_ios15">24.0dip</dimen>
+    <dimen name="status_bar_battery_icon_height_landscape_ios16">12.0dip</dimen>
+    <dimen name="status_bar_battery_icon_width_landscape_ios16">24.0dip</dimen>
+    <dimen name="status_bar_battery_icon_height_landscape_origami">12.0dip</dimen>
+    <dimen name="status_bar_battery_icon_width_landscape_origami">16.0dip</dimen>
+    <dimen name="status_bar_battery_icon_height_landscape_miui_pill">12.0dip</dimen>
+    <dimen name="status_bar_battery_icon_width_landscape_miui_pill">24.0dip</dimen>
 
+    <!-- QQS Brightness slider -->
+    <dimen name="qqs_top_brightness_margin_top">4dp</dimen>
+    <dimen name="qqs_top_brightness_margin_bottom">12dp</dimen>
+    <dimen name="qqs_bottom_brightness_margin_top">12dp</dimen>
+
+    <!-- QS Brightness slider -->
+    <dimen name="qs_top_brightness_margin_top">0dp</dimen>
+    <dimen name="qs_top_brightness_margin_bottom">28dp</dimen>
+    <dimen name="qs_bottom_brightness_margin_top">28dp</dimen>
+
+    <!-- Largest size an avatar might need to be drawn in the power menu user picker -->
+    <dimen name="global_actions_avatar_size">24dp</dimen>
+
+    <!-- Additional gesture navbar lengths -->
+    <dimen name="navigation_home_handle_width_short">72dp</dimen>
+    <dimen name="navigation_home_handle_width_long">140dp</dimen>
+
+    <!-- Udfps fingerprint animation -->
+    <dimen name="udfps_animation_size">280dp</dimen>
+    <dimen name="udfps_animation_offset">0dp</dimen>
+
+    <!-- OmniStyle custom headers -->
+    <dimen name="qs_header_image_height">142dp</dimen>
+    <dimen name="qs_header_image_fade_size">80dp</dimen>
+
+    <!-- Island notification -->
+    <dimen name="island_icon_size">48dp</dimen>
+    <dimen name="island_side_margin">12dp</dimen>
+
+    <!-- QS A11 Style -->
+    <dimen name="custom_qs_panel_padding_top">0dp</dimen>
+
+    <!-- Tri-state UI -->
+    <dimen name="tri_state_down_dialog_position">850.0px</dimen>
+    <dimen name="tri_state_down_dialog_position_l">650.0px</dimen>
+    <dimen name="tri_state_middle_dialog_position">650.0px</dimen>
+    <dimen name="tri_state_middle_dialog_position_l">650.0px</dimen>
+    <dimen name="tri_state_up_dialog_position">450.0px</dimen>
+    <dimen name="tri_state_up_dialog_position_l">650.0px</dimen>
+    <dimen name="tri_state_up_dialog_position_deep">21.0px</dimen>
+    <dimen name="tri_state_up_dialog_position_deep_land">21.0px</dimen>
+    <dimen name="tri_state_dialog_elevation">4.0dip</dimen>
+    <dimen name="tri_state_dialog_icon_size">24.0dip</dimen>
+    <dimen name="tri_state_dialog_padding">8.0dip</dimen>
+    <dimen name="tri_state_mid_bottom_left_radius">24.0dip</dimen>
+    <dimen name="tri_state_mid_bottom_right_radius">24.0dip</dimen>
+    <dimen name="tri_state_mid_top_left_radius">24.0dip</dimen>
+    <dimen name="tri_state_mid_top_right_radius">24.0dip</dimen>
+    <dimen name="left_tri_state_down_bottom_left_radius">24.0dip</dimen>
+    <dimen name="left_tri_state_down_bottom_right_radius">24.0dip</dimen>
+    <dimen name="left_tri_state_down_top_left_radius">0.0dip</dimen>
+    <dimen name="left_tri_state_down_top_right_radius">24.0dip</dimen>
+    <dimen name="left_tri_state_up_bottom_left_radius">0.0dip</dimen>
+    <dimen name="left_tri_state_up_bottom_right_radius">24.0dip</dimen>
+    <dimen name="left_tri_state_up_top_left_radius">24.0dip</dimen>
+    <dimen name="left_tri_state_up_top_right_radius">24.0dip</dimen>
+    <dimen name="right_tri_state_down_bottom_left_radius">24.0dip</dimen>
+    <dimen name="right_tri_state_down_bottom_right_radius">24.0dip</dimen>
+    <dimen name="right_tri_state_down_top_left_radius">24.0dip</dimen>
+    <dimen name="right_tri_state_down_top_right_radius">0.0dip</dimen>
+    <dimen name="right_tri_state_up_bottom_left_radius">24.0dip</dimen>
+    <dimen name="right_tri_state_up_bottom_right_radius">0.0dip</dimen>
+    <dimen name="right_tri_state_up_top_left_radius">24.0dip</dimen>
+    <dimen name="right_tri_state_up_top_right_radius">24.0dip</dimen>
 </resources>

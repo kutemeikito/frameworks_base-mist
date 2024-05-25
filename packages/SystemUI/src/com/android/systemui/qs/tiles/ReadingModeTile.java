@@ -39,9 +39,9 @@ import com.android.systemui.qs.QsEventLogger;
 import com.android.systemui.qs.logging.QSLogger;
 import com.android.systemui.qs.tileimpl.QSTileImpl;
 
-import com.android.internal.util.cherish.PackageManagerUtils;
+import com.android.internal.util.mist.PackageManagerUtils;
 
-import com.android.internal.cherish.hardware.LineageHardwareManager;
+import com.android.internal.mist.hardware.LineageHardwareManager;
 
 import javax.inject.Inject;
 

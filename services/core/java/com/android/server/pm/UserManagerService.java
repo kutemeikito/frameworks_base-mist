@@ -6436,16 +6436,9 @@ public class UserManagerService extends IUserManager.Stub {
         if (userInfo == null) {
             return;
         }
-<<<<<<< HEAD
-        // Migrate only if build fingerprints mismatch
-        boolean migrateAppsData = !PackagePartitions.FINGERPRINT.equals(
-                userInfo.lastLoggedInFingerprint);
-=======
-        final int userSerial = userInfo.serialNumber;
+
         // Migrate only if needed
-        boolean migrateAppsData =
-                !Build.VERSION.INCREMENTAL.equals(userInfo.lastLoggedInFingerprint);
->>>>>>> cb287e42f35a (fw/b: Use ro.build.version.incremental to signal OTA upgrades)
+        boolean migrateAppsData = !Build.VERSION.INCREMENTAL.equals(userInfo.lastLoggedInFingerprint);
 
         final TimingsTraceAndSlog t = new TimingsTraceAndSlog();
         t.traceBegin("prepareUserData-" + userId);

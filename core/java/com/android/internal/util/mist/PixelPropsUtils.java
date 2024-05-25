@@ -2,7 +2,7 @@
  * Copyright (C) 2020 The Pixel Experience Project
  *               2022 StatiXOS
  *               2021-2022 crDroid Android Project
- *               2020-2024 The Cherish OS Project
+ *               2020-2024 The Mist OS Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ import android.util.Log;
 import android.view.WindowManager;
 
 import com.android.internal.R;
-import com.android.internal.util.cherish.CherishUtils;
+import com.android.internal.util.mist.MistUtils;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -63,7 +63,7 @@ public class PixelPropsUtils {
     private static final String SPOOF_PIXEL_PROPS = "persist.sys.pixelprops";
 
     private static final String TAG = PixelPropsUtils.class.getSimpleName();
-    private static final String DEVICE = "ro.cherish.device";
+    private static final String DEVICE = "ro.mist.device";
     private static final boolean DEBUG = SystemProperties.getBoolean("persist.sys.pixelprops.debug", false);
 
     private static final Boolean sEnablePixelProps =
@@ -271,7 +271,7 @@ public class PixelPropsUtils {
     public static void spoofBuildGms(Context context) {
         String packageName = "com.goolag.pif";
 
-        if (!CherishUtils.isPackageInstalled(context, packageName)) {
+        if (!MistUtils.isPackageInstalled(context, packageName)) {
             Log.e(TAG, "'" + packageName + "' is not installed.");
             return;
         }

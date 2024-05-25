@@ -33,7 +33,7 @@ import com.android.systemui.Dependency;
 import com.android.systemui.res.R;
 import com.android.systemui.tuner.TunerService;
 
-import com.android.internal.util.cherish.ThemeUtils;
+import com.android.internal.util.mist.ThemeUtils;
 
 public class VolumeUtils implements TunerService.Tunable {
     private static final String TAG = "VolumeUtils";

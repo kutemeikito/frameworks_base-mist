@@ -50,15 +50,6 @@
     <!-- The list of package IDs that are allowed to skip camera high frame rate checks. -->
     <string-array name="config_cameraHFRPrivAppList" translatable="false" />
 
-    <!-- Device model (Build.MODEL) to spoof for netflix, if not empty -->
-    <string name="config_netflixSpoofModel" translatable="false"></string>
-
-    <!-- Whether Pixel props is enabled -->
-    <bool name="config_enablePixelProps">true</bool>
-
-    <!-- Whether device has Google Tensor SoC -->
-    <bool name="config_hasTensorSoC">false</bool>
-
     <!-- The list of components which should be automatically disabled for a specific device.
          Note: this MUST not be used to randomly disable components, ask for approval first! -->
     <string-array name="config_deviceDisabledComponents" translatable="false">

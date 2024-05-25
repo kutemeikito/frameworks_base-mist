@@ -1,20 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-     Copyright (C)2020-2024 The SuperiorOS Project
+     Copyright (C) 2020-22 The CherishOS Project
      SPDX-License-Identifier: Apache-2.0
 -->
 <resources>
 
-     <!-- Cardinal directions for the compass tile -->
-     <string-array name="cardinal_directions">
-          <item>@string/quick_settings_compass_N</item>  <!-- North -->
-          <item>@string/quick_settings_compass_NE</item> <!-- North east -->
-          <item>@string/quick_settings_compass_E</item>  <!-- East -->
-          <item>@string/quick_settings_compass_SE</item> <!-- South east -->
-          <item>@string/quick_settings_compass_S</item>  <!-- South -->
-          <item>@string/quick_settings_compass_SW</item> <!-- South west -->
-          <item>@string/quick_settings_compass_W</item>  <!-- West -->
-          <item>@string/quick_settings_compass_NW</item> <!-- North west -->
-     </string-array>
+   <color name="qs_ripple_color">@android:color/system_accent1_400</color>
 
+   <color name="qs_translucent_bg">#59FFFFFF</color>
+   <color name="qs_white_bg">@android:color/system_neutral1_0</color>
+   <color name="footer_actions_bg">@android:color/system_neutral1_900</color>
+
+   <!-- New color style -->
+   <color name="colorAccent">@android:color/system_accent1_600</color>
+   <color name="colorAccentVariant">@android:color/system_accent3_600</color>
+   <color name="rippleAccent">@color/color_container_overlay_light</color>
+   <color name="rippleDark">#1A000000</color>
+   <color name="rippleDarker">#33000000</color>
+   <color name="holo_blue_light">@android:color/system_accent1_600</color>
+   <color name="holo_green_light">@android:color/system_accent3_600</color>
+   <color name="colorBackground">@android:color/system_neutral2_50</color>
+   <color name="colorContainer">@android:color/system_neutral2_50</color>
+   <color name="shadow">#14000000</color>
+   <color name="neumorph_outline_start">#FFBDBDBD</color>
+   <color name="neumorph_outline_end">#FFF0F0F0</color>
+
+   <!-- Island notification -->
+    <color name="island_background_color_dark">@android:color/system_neutral1_800</color>
+    <color name="island_background_color_light">@android:color/system_neutral1_0</color>
 </resources>

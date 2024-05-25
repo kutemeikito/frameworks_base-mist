@@ -807,8 +807,8 @@ public class UdfpsController implements DozeReceiver, Dumpable {
         mFrameworkDimmingDelay = mContext.getResources().getInteger(R.integer.config_udfpsDimmingDisableDelay);
         parseBrightnessAlphaArray();
 
-        if (com.android.internal.util.cherish.Utils.isPackageInstalled(mContext,
-                "com.cherish.udfps.animations")) {
+        if (com.android.internal.util.mist.Utils.isPackageInstalled(mContext,
+                "com.mist.udfps.animations")) {
             mUdfpsAnimation = new UdfpsAnimation(mContext, mWindowManager, mSensorProps);
         }
     }
