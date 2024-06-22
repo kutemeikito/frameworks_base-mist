@@ -39,6 +39,7 @@ import android.content.Context;
 import android.database.ContentObserver;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Debug.MemoryInfo;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PowerExemptionManager;
@@ -54,6 +55,7 @@ import android.util.Slog;
 
 import com.android.internal.R;
 import com.android.internal.annotations.GuardedBy;
+import com.android.internal.util.MemInfoReader;
 
 import dalvik.annotation.optimization.NeverCompile;
 
@@ -1412,14 +1414,12 @@ final class ActivityManagerConstants extends ContentObserver {
                 .map(ComponentName::unflattenFromString).collect(Collectors.toSet()));
         mCustomizedMaxCachedProcesses = context.getResources().getInteger(
                 com.android.internal.R.integer.config_customizedMaxCachedProcesses);
-        CUR_MAX_CACHED_PROCESSES = Integer.min(mCustomizedMaxCachedProcesses, MAX_CACHED_PROCESSES);
+        updateTotalMaxCachedProcesses();
         CUR_MAX_EMPTY_PROCESSES = computeEmptyProcessLimit(CUR_MAX_CACHED_PROCESSES);
 
-        final int rawMaxEmptyProcesses = computeEmptyProcessLimit(
-                Integer.min(CUR_MAX_CACHED_PROCESSES, MAX_CACHED_PROCESSES));
+        final int rawMaxEmptyProcesses = computeEmptyProcessLimit(CUR_MAX_CACHED_PROCESSES);
         CUR_TRIM_EMPTY_PROCESSES = rawMaxEmptyProcesses / 2;
-        CUR_TRIM_CACHED_PROCESSES = (Integer.min(CUR_MAX_CACHED_PROCESSES, MAX_CACHED_PROCESSES)
-                    - rawMaxEmptyProcesses) / 3;
+        CUR_TRIM_CACHED_PROCESSES = (CUR_MAX_CACHED_PROCESSES - rawMaxEmptyProcesses) / 3;
         loadNativeBootDeviceConfigConstants();
         mDefaultDisableAppProfilerPssProfiling = context.getResources().getBoolean(
                 R.bool.config_am_disablePssProfiling);
@@ -1428,6 +1428,25 @@ final class ActivityManagerConstants extends ContentObserver {
         mDefaultPssToRssThresholdModifier = context.getResources().getFloat(
                 com.android.internal.R.dimen.config_am_pssToRssThresholdModifier);
         PSS_TO_RSS_THRESHOLD_MODIFIER = mDefaultPssToRssThresholdModifier;
+    }
+    
+    private void updateTotalMaxCachedProcesses() {
+        final int RAM_4GB = 4 * 1024; 
+        final int RAM_6GB = 6 * 1024;
+        final int RAM_8GB = 8 * 1024;
+        final int RAM_10GB = 10 * 1024; 
+        MemInfoReader memInfoReader = new MemInfoReader();
+        memInfoReader.readMemInfo();
+        long totalRamSize = memInfoReader.getTotalSize() / (1024 * 1024);
+        if (totalRamSize < RAM_4GB) {
+            CUR_MAX_CACHED_PROCESSES = 32;
+        } else if (totalRamSize < RAM_6GB) {
+            CUR_MAX_CACHED_PROCESSES = 128;
+        } else if (totalRamSize < RAM_8GB) {
+            CUR_MAX_CACHED_PROCESSES = 256;
+        } else {
+            CUR_MAX_CACHED_PROCESSES = 1024;
+        }
     }
 
     public void start(ContentResolver resolver) {
@@ -1988,28 +2007,13 @@ final class ActivityManagerConstants extends ContentObserver {
     }
 
     private void updateMaxCachedProcesses() {
-        String maxCachedProcessesFlag = DeviceConfig.getProperty(
-                DeviceConfig.NAMESPACE_ACTIVITY_MANAGER, KEY_MAX_CACHED_PROCESSES);
-        try {
-            CUR_MAX_CACHED_PROCESSES = mOverrideMaxCachedProcesses < 0
-                    ? (TextUtils.isEmpty(maxCachedProcessesFlag)
-                    ? mCustomizedMaxCachedProcesses : Integer.parseInt(maxCachedProcessesFlag))
-                    : mOverrideMaxCachedProcesses;
-        } catch (NumberFormatException e) {
-            // Bad flag value from Phenotype, revert to default.
-            Slog.e(TAG,
-                    "Unable to parse flag for max_cached_processes: " + maxCachedProcessesFlag, e);
-            CUR_MAX_CACHED_PROCESSES = mCustomizedMaxCachedProcesses;
-        }
-        CUR_MAX_CACHED_PROCESSES = Integer.min(CUR_MAX_CACHED_PROCESSES, MAX_CACHED_PROCESSES);
+        updateTotalMaxCachedProcesses();
 
         CUR_MAX_EMPTY_PROCESSES = computeEmptyProcessLimit(CUR_MAX_CACHED_PROCESSES);
 
-        final int rawMaxEmptyProcesses = computeEmptyProcessLimit(
-                Integer.min(CUR_MAX_CACHED_PROCESSES, MAX_CACHED_PROCESSES));
+        final int rawMaxEmptyProcesses = computeEmptyProcessLimit(CUR_MAX_CACHED_PROCESSES);
         CUR_TRIM_EMPTY_PROCESSES = rawMaxEmptyProcesses / 2;
-        CUR_TRIM_CACHED_PROCESSES = (Integer.min(CUR_MAX_CACHED_PROCESSES, MAX_CACHED_PROCESSES)
-                    - rawMaxEmptyProcesses) / 3;
+        CUR_TRIM_CACHED_PROCESSES = (CUR_MAX_CACHED_PROCESSES - rawMaxEmptyProcesses) / 3;
     }
 
     private void updateProactiveKillsEnabled() {
