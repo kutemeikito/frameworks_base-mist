@@ -39,7 +39,7 @@ import androidx.annotation.Nullable;
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.logging.nano.MetricsProto.MetricsEvent;
 
-import com.android.systemui.R;
+import com.android.systemui.res.R;
 import com.android.systemui.dagger.qualifiers.Background;
 import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.plugins.ActivityStarter;
@@ -114,14 +114,17 @@ public class PreferredNetworkTile extends QSTileImpl<State> {
     @Override
     protected void handleUpdateState(State state, Object arg) {
         state.icon = mIcon;
-        state.label = mContext.getResources().getString(R.string.quick_settings_preferred_network_label);
+        state.label = 
+mContext.getResources().getString(R.string.quick_settings_preferred_network_label);
         final int mode = getPreferredNetworkMode();
         final int newMode = TelephonyManagerConstants.getTargetMode(mode);
         state.state = newMode == -1 ? Tile.STATE_UNAVAILABLE : Tile.STATE_ACTIVE;
-        state.secondaryLabel = newMode == -1 ? mContext.getResources().getString(R.string.quick_settings_preferred_network_unsupported)
+        state.secondaryLabel = newMode == -1 ? 
+mContext.getResources().getString(R.string.quick_settings_preferred_network_unsupported)
                 : (TelephonyManagerConstants.is5gMode(mode) ?
                 mContext.getResources().getString(R.string.quick_settings_preferred_network_nr)
-                : mContext.getResources().getString(R.string.quick_settings_preferred_network_lte));
+                : 
+mContext.getResources().getString(R.string.quick_settings_preferred_network_lte));
     }
 
     @Override
@@ -141,7 +144,8 @@ public class PreferredNetworkTile extends QSTileImpl<State> {
     private int getPreferredNetworkMode() {
         final int subId = SubscriptionManager.getDefaultDataSubscriptionId();
         return getNetworkTypeFromRaf(
-                (int) mTelephonyManager.createForSubscriptionId(subId).getAllowedNetworkTypesForReason(
+                (int) 
+mTelephonyManager.createForSubscriptionId(subId).getAllowedNetworkTypesForReason(
                         TelephonyManager.ALLOWED_NETWORK_TYPES_REASON_USER));
     }
 
@@ -566,7 +570,8 @@ public class PreferredNetworkTile extends QSTileImpl<State> {
         public static final int RAF_HSPA = (int) TelephonyManager.NETWORK_TYPE_BITMASK_HSPA;
         public static final int RAF_HSPAP = (int) TelephonyManager.NETWORK_TYPE_BITMASK_HSPAP;
         public static final int RAF_UMTS = (int) TelephonyManager.NETWORK_TYPE_BITMASK_UMTS;
-        public static final int RAF_TD_SCDMA = (int) TelephonyManager.NETWORK_TYPE_BITMASK_TD_SCDMA;
+        public static final int RAF_TD_SCDMA = (int) 
+TelephonyManager.NETWORK_TYPE_BITMASK_TD_SCDMA;
         // 4G
         public static final int RAF_LTE = (int) TelephonyManager.NETWORK_TYPE_BITMASK_LTE;
         public static final int RAF_LTE_CA = (int) TelephonyManager.NETWORK_TYPE_BITMASK_LTE_CA;
