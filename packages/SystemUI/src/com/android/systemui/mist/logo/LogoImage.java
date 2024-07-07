@@ -26,6 +26,7 @@ import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
+import android.os.UserHandle;
 import android.provider.Settings;
 import android.util.AttributeSet;
 import android.view.View;
@@ -144,11 +145,11 @@ public abstract class LogoImage extends ImageView implements DarkReceiver {
     }
 
     public void updateSettings() {
-        mShowLogo = Settings.System.getInt(mContext.getContentResolver(), STATUS_BAR_LOGO, 0) != 0;
-        mLogoPosition = Settings.System.getInt(mContext.getContentResolver(), STATUS_BAR_LOGO_POSITION, 0);
-        mLogoStyle = Settings.System.getInt(mContext.getContentResolver(), STATUS_BAR_LOGO_STYLE, 0);
-        mLogoColor = Settings.System.getInt(mContext.getContentResolver(), STATUS_BAR_LOGO_COLOR, 0);
-        mLogoColorCustom = Settings.System.getInt(mContext.getContentResolver(),STATUS_BAR_LOGO_COLOR_PICKER, 0xff1a73e8);
+        mShowLogo = Settings.System.getIntForUser(mContext.getContentResolver(), STATUS_BAR_LOGO, 0) != 0;
+        mLogoPosition = Settings.System.getIntForUser(mContext.getContentResolver(), STATUS_BAR_LOGO_POSITION, 0);
+        mLogoStyle = Settings.System.getIntForUser(mContext.getContentResolver(), STATUS_BAR_LOGO_STYLE, 0);
+        mLogoColor = Settings.System.getIntForUser(mContext.getContentResolver(), STATUS_BAR_LOGO_COLOR, 0);
+        mLogoColorCustom = Settings.System.getIntForUser(mContext.getContentResolver(),STATUS_BAR_LOGO_COLOR_PICKER, 0xff1a73e8);
 
         if (!mShowLogo || isLogoHidden()) {
             setImageDrawable(null);
