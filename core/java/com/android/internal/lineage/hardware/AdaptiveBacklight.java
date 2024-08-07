@@ -19,7 +19,7 @@ package com.android.internal.lineage.hardware;
 
 import android.util.Log;
 
-import com.android.internal.util.everest.FileUtils;
+import com.android.internal.util.mist.FileUtils;
 
 /**
  * Adaptive backlight support (this refers to technologies like NVIDIA SmartDimmer,
