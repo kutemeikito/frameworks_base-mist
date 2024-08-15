@@ -87,7 +87,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.android.internal.util.everest.OmniJawsClient;
+import com.android.internal.util.mist.OmniJawsClient;
 
 public class LockScreenWidgets extends LinearLayout implements TunerService.Tunable, OmniJawsClient.OmniJawsObserver {
 
