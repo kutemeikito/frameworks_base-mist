@@ -51,6 +51,7 @@ import com.android.systemui.qs.tiles.dialog.InternetDialogManager;
 import com.android.systemui.recents.OverviewProxyService;
 import com.android.systemui.settings.UserTracker;
 import com.android.systemui.statusbar.CommandQueue;
+import com.android.systemui.statusbar.NotificationListener;
 import com.android.systemui.statusbar.connectivity.AccessPointController;
 import com.android.systemui.statusbar.connectivity.NetworkController;
 import com.android.systemui.statusbar.NotificationMediaManager;
@@ -172,6 +173,7 @@ public class Dependency {
     @Inject Lazy<AccessibilityButtonModeObserver> mAccessibilityButtonModeObserver;
     @Inject Lazy<AccessibilityButtonTargetsObserver> mAccessibilityButtonListController;
     @Inject Lazy<IStatusBarService> mIStatusBarService;
+    @Inject Lazy<NotificationListener> mNotificationListener;
     @Inject Lazy<NotificationRemoteInputManager.Callback> mNotificationRemoteInputManagerCallback;
     @Inject Lazy<NavigationBarController> mNavigationBarController;
     @Inject Lazy<StatusBarStateController> mStatusBarStateController;
@@ -245,6 +247,7 @@ public class Dependency {
         mProviders.put(NavigationBarController.class, mNavigationBarController::get);
         mProviders.put(StatusBarStateController.class, mStatusBarStateController::get);
         mProviders.put(NotificationMediaManager.class, mNotificationMediaManager::get);
+        mProviders.put(NotificationListener.class, mNotificationListener::get);
         mProviders.put(SysUiState.class, mSysUiStateFlagsContainer::get);
         mProviders.put(CommandQueue.class, mCommandQueue::get);
         mProviders.put(UiEventLogger.class, mUiEventLogger::get);
