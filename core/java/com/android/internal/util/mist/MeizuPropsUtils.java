@@ -1,4 +1,4 @@
-*
+/*
  * Copyright (C) 2020 The Pixel Experience Project
  *               2020 The exTHmUI Open Source Project
  *               2022 Project Kaleidoscope
