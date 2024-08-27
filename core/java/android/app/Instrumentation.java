@@ -72,7 +72,6 @@ import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.concurrent.TimeoutException;
 
-import com.android.internal.util.mist.MeizuPropsUtils;
 import com.android.internal.util.mist.AttestationHooks;
 import com.android.internal.util.mist.GamesPropsUtils;
 import com.android.internal.util.mist.PixelPropsUtils;
@@ -1359,7 +1358,6 @@ public class Instrumentation {
         AttestationHooks.setProps(context);
         GamesPropsUtils.setProps(context);
         PixelPropsUtils.setProps(context);
-        MeizuPropsUtils.setProps(context);
         return app;
     }
     
@@ -1380,7 +1378,6 @@ public class Instrumentation {
         AttestationHooks.setProps(context);
         GamesPropsUtils.setProps(context);
         PixelPropsUtils.setProps(context);
-        MeizuPropsUtils.setProps(context);
         return app;
     }
 
