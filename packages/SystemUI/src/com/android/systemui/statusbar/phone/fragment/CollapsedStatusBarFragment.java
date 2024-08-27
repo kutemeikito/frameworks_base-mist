@@ -62,7 +62,6 @@ import com.android.systemui.statusbar.events.SystemStatusAnimationCallback;
 import com.android.systemui.statusbar.events.SystemStatusAnimationScheduler;
 import com.android.systemui.statusbar.notification.icon.ui.viewbinder.NotificationIconContainerStatusBarViewBinder;
 import com.android.systemui.statusbar.notification.shared.NotificationIconContainerRefactor;
-import com.android.systemui.statusbar.phone.LyricViewController;
 import com.android.systemui.statusbar.phone.ClockController;
 import com.android.systemui.statusbar.phone.NotificationIconAreaController;
 import com.android.systemui.statusbar.phone.NotificationIconContainer;
@@ -177,8 +176,6 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
     private int[] mClockPaddingStartArray = new int[3];
     private int[] mClockPaddingEndArray = new int[3];
     private View mStatusBarLogo;
-
-    private LyricController mLyricController;
 
     private List<String> mBlockedIcons = new ArrayList<>();
     private Map<Startable, Startable.State> mStartableStates = new ArrayMap<>();
@@ -388,12 +385,6 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
         showClock(false);
         initOperatorName();
         initNotificationIconArea();
-
-        mLyricController = new LyricController(getContext(), mStatusBar);
-        mStatusBarFragmentComponent.getHeadsUpAppearanceController().setLyricViewController(mLyricController);
-        Dependency.get(TunerService.class).addTunable(this, Settings.Secure.STATUS_BAR_SHOW_LYRIC);
-
-
         mSystemEventAnimator = getSystemEventAnimator();
         mCarrierConfigTracker.addCallback(mCarrierConfigCallback);
         mCarrierConfigTracker.addDefaultDataSubscriptionChangedListener(mDefaultDataListener);
@@ -555,15 +546,6 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
         }
     }
 
-    @Override
-    public void onTuningChanged(String key, String newValue) {
-        if (key.equals(Settings.Secure.STATUS_BAR_SHOW_LYRIC)) {
-            if (mLyricController != null) {
-                mLyricController.setEnabled(TunerService.parseIntegerSwitch(newValue, false));
-            }
-        }
-    }
-
     /** Initializes views related to the notification icon area. */
     public void initNotificationIconArea() {
         Trace.beginSection("CollapsedStatusBarFragment#initNotifIconArea");
@@ -708,14 +690,8 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
         // Hide notifications if the disable flag is set or we have an ongoing call.
         if (disableNotifications || hasOngoingCall) {
             hideNotificationIconArea(animate && !hasOngoingCall && !hasOngoingCall);
-        if (mLyricController != null) {
-                mLyricController.hideLyricView(animate);
-            }
         } else {
             showNotificationIconArea(animate);
-            if (mLyricController != null) {
-                mLyricController.showLyricView(animate);
-            }
         }
 
         // Show the ongoing call chip only if there is an ongoing call *and* notification icons
@@ -1008,31 +984,6 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
                 pw.println(startable + ", state: " + startableState);
             }
             pw.decreaseIndent();
-        }
-    }
-
-    private class LyricController extends LyricViewController {
-        private View mLeftSide;
-
-        public LyricController(Context context, View statusBar) {
-            super(context, statusBar);
-            mLeftSide = statusBar.findViewById(R.id.status_bar_start_side_except_heads_up);
-        }
-
-        public void showLyricView(boolean animate) {
-            StatusBarVisibilityModel visibilityModel = mLastModifiedVisibility;
-
-            boolean disableNotifications = !visibilityModel.getShowNotificationIcons();
-            boolean hasOngoingCall = visibilityModel.getShowOngoingCallChip();
-            if (!disableNotifications && !hasOngoingCall && isLyricStarted()) {
-                animateHide(mLeftSide, animate);
-                animateShow(getView(), animate);
-            }
-        }
-
-        public void hideLyricView(boolean animate) {
-            animateHide(getView(), animate);
-            animateShow(mLeftSide, animate);
         }
     }
 }
