@@ -239,11 +239,4 @@
     <java-symbol type="integer" name="config_doubleTapOnHomeBehavior" />
     <java-symbol type="integer" name="config_longPressOnMenuBehavior" />
     <java-symbol type="integer" name="config_longPressOnAppSwitchBehavior" />
-
-    <!-- Define phenotype/gservices flags -->
-    <java-symbol type="array" name="global_phenotype_flags_override" />
-    <java-symbol type="array" name="device_phenotype_flags_override" />
-    <!-- Additional namespaces for packages' phenotype/gservices flags -->
-    <java-symbol type="array" name="global_phenotype_package_namespaces" />
-    <java-symbol type="array" name="device_phenotype_package_namespaces" />
 </resources>
