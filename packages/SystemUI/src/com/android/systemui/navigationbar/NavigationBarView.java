@@ -621,7 +621,6 @@ public class NavigationBarView extends FrameLayout implements
             mTransitionListener.onBackAltCleared();
         }
         mImeVisible = visible;
-        mEdgeBackGestureHandler.setImeVisible(visible);
         mRotationButtonController.getRotationButton().setCanShowRotationButton(!visible && mIsUserEnabled);
     }
 
