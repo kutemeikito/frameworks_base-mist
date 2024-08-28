@@ -17,6 +17,7 @@
 package com.android.internal.util.custom;
 
 import android.content.res.Resources;
+import android.os.SystemProperties;
 import android.provider.Settings;
 import android.util.Log;
 import java.util.Arrays;
@@ -35,6 +36,9 @@ public final class DeviceConfigUtils {
 
     private static final boolean DEBUG = false;
 
+    private static Boolean sEnableDeviceConfigUtils =
+            SystemProperties.getBoolean("persist.sys.dchooks.enable", true);
+
     private static String[] getDeviceConfigsOverride() {
         String[] globalDeviceConfigs =
             Resources.getSystem().getStringArray(com.android.internal.R.array.global_device_configs_override);
@@ -46,6 +50,8 @@ public final class DeviceConfigUtils {
     }
 
     public static boolean shouldDenyDeviceConfigControl(String namespace, String property) {
+        if (!sEnableDeviceConfigUtils) return false;
+
         if (DEBUG) Log.d(TAG, "shouldAllowDeviceConfigControl, namespace=" + namespace + ", property=" + property);
         for (String p : getDeviceConfigsOverride()) {
             String[] kv = p.split("=");
@@ -61,6 +67,8 @@ public final class DeviceConfigUtils {
     }
 
     public static void setDefaultProperties(String filterNamespace, String filterProperty) {
+        if (!sEnableDeviceConfigUtils) return;
+
         if (DEBUG) Log.d(TAG, "setDefaultProperties");
         for (String p : getDeviceConfigsOverride()) {
             String[] kv = p.split("=");
