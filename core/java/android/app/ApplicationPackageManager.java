@@ -894,7 +894,7 @@ public class ApplicationPackageManager extends PackageManager {
     @Override
     public boolean hasSystemFeature(String name, int version) {
         String packageName = ActivityThread.currentPackageName();
-        String deviceCodename = SystemProperties.get("ro.mist.device");
+        String deviceCodename = SystemProperties.get("ro.product.device");
         boolean isGPhotosSpoofed = SystemProperties.getBoolean("persist.sys.pixelprops.gphotos", true);
         boolean isTensorDevice = Arrays.asList(pTensorCodenames).contains(deviceCodename);
 
