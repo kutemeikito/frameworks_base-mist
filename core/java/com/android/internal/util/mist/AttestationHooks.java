@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.android.internal.util.everest;
+package com.android.internal.util.mist;
 
 import android.os.SystemProperties;
 import android.security.keystore.KeyProperties;
