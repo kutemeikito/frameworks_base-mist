@@ -911,14 +911,14 @@ public class ApplicationPackageManager extends PackageManager {
         }
         if (packageName != null
                 && packageName.equals("com.google.android.apps.photos")
-                && SystemProperties.getBoolean("persist.sys.gphooks.enable", false)) {
+                && SystemProperties.getBoolean("persist.sys.pixelprops.gphotos", true)) {
             if (Arrays.asList(featuresPixel).contains(name)) return false;
             if (Arrays.asList(featuresPixelOthers).contains(name)) return true;
             if (Arrays.asList(featuresTensor).contains(name)) return false;
             if (Arrays.asList(featuresNexus).contains(name)) return true;
         }
         if (name != null && Arrays.asList(featuresTensor).contains(name)
-                && !Arrays.asList(pTensorCodenames).contains(SystemProperties.get("ro.everest.device"))) {
+                && !Arrays.asList(pTensorCodenames).contains(SystemProperties.get("ro.mist.device"))) {
             return false;
         }
         if (Arrays.asList(featuresAndroid).contains(name)) return true;
