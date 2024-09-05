@@ -6402,6 +6402,12 @@ public final class Settings {
         public static final String VOLUME_KEY_CURSOR_CONTROL = "volume_key_cursor_control";
 
         /**
+         * Settings Dashboard Style
+         * @hide
+         */
+        public static final String SETTINGS_DASHBOARD_STYLE = "settings_dashboard_style";
+
+        /**
          * Whether the phone ringtone should be played in an increasing manner
          * 0 = 0ff, 1 = on
          * @hide
