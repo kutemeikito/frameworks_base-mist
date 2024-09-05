@@ -110,6 +110,8 @@ public class Clock extends TextView implements
             "system:" + Settings.System.STATUS_BAR_CLOCK_AUTO_HIDE_HDURATION;
     public static final String STATUS_BAR_CLOCK_AUTO_HIDE_SDURATION =
             "system:" + Settings.System.STATUS_BAR_CLOCK_AUTO_HIDE_SDURATION;
+    public static final String STATUS_BAR_CUSTOM_CLOCK_COLOR =
+            "system:" + Settings.System.STATUS_BAR_CUSTOM_CLOCK_COLOR;
     private static final String STATUSBAR_CLOCK_CHIP =
             "system:" + Settings.System.STATUSBAR_CLOCK_CHIP;
     public static final String STATUS_BAR_CLOCK_SIZE =
@@ -153,7 +155,8 @@ public class Clock extends TextView implements
     public static final int FONT_NOTOSERIF_BOLD = 23;
     public static final int FONT_NOTOSERIF_BOLD_ITALIC = 24;
     public int DEFAULT_CLOCK_COLOR = 0xffffffff;
-    private int mClockColor = 0xffffffff;
+    public boolean mCustomClockColor = false;
+    public int mClockColor = 0xffffffff;
 
     private final CommandQueue mCommandQueue;
     private int mCurrentUserId;
@@ -322,6 +325,7 @@ public class Clock extends TextView implements
                     STATUS_BAR_CLOCK_SIZE,
                     QS_HEADER_CLOCK_SIZE,
                     STATUS_BAR_CLOCK_FONT_STYLE,
+                    STATUS_BAR_CUSTOM_CLOCK_COLOR,
                     STATUS_BAR_CLOCK_COLOR);
             mCommandQueue.addCallback(this);
             if (mShowDark) {
@@ -579,6 +583,11 @@ public class Clock extends TextView implements
                         TunerService.parseInteger(newValue, FONT_NORMAL);
                 updateClockFontStyle();
                 break;
+            case STATUS_BAR_CUSTOM_CLOCK_COLOR:
+                mCustomClockColor =
+                        TunerService.parseIntegerSwitch(newValue, false);
+                updateClockColor();
+                break;
             case STATUS_BAR_CLOCK_COLOR:
                 mClockColor =
                         TunerService.parseInteger(newValue, DEFAULT_CLOCK_COLOR);
@@ -610,23 +619,31 @@ public class Clock extends TextView implements
     @Override
     public void onDarkChanged(ArrayList<Rect> areas, float darkIntensity, int tint) {
         mNonAdaptedColor = DarkIconDispatcher.getTint(areas, this, tint);
+    if (mCustomClockColor == true) {
         if (mClockColor == 0xFFFFFFFF) {
             setTextColor(mClockBgOn ? Color.WHITE : mNonAdaptedColor);
         } else {
             setTextColor(mClockColor);
         }
-    }
+    }  else {
+        setTextColor(mNonAdaptedColor);
+        }  
+     }
 
     // Update text color based when shade scrim changes color.
     public void onColorsChanged(boolean lightTheme) {
         final Context context = new ContextThemeWrapper(mContext,
                 lightTheme ? R.style.Theme_SystemUI_LightWallpaper : R.style.Theme_SystemUI);
+    if (mCustomClockColor == true) {
         if (mClockColor == 0xFFFFFFFF) {
             setTextColor(Utils.getColorAttrDefaultColor(context, R.attr.wallpaperTextColor));
         } else {
             setTextColor(mClockColor);
         }
-    }
+    }  else {
+        setTextColor(Utils.getColorAttrDefaultColor(context, R.attr.wallpaperTextColor));
+        }
+     }
 
     @Override
     public void onDensityOrFontScaleChanged() {
@@ -896,15 +913,18 @@ public void updateClockSize() {
         }
     }
 
-    private void updateClockColor() {
+    public void updateClockColor() {
+    if (mCustomClockColor == true)   {
         if (mClockColor == 0xFFFFFFFF) {
             setTextColor(mNonAdaptedColor);
         } else {
             setTextColor(mClockColor);
         }
-   	   updateClock();
-    }
-
+    }  else{
+        setTextColor(mNonAdaptedColor);
+        }
+       updateClock();
+     }
     private void updateClockFontStyle() {
         getClockFontStyle(mClockFontStyle);
         updateClock();

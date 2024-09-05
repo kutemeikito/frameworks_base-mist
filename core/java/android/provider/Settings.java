@@ -7214,6 +7214,12 @@ public final class Settings {
         public static final String STATUS_BAR_CLOCK_COLOR = "status_bar_clock_color";
 
         /**
+         * Clock font color
+         * @hide
+         */
+        public static final String STATUS_BAR_CUSTOM_CLOCK_COLOR = "status_bar_custom_clock_color";
+
+        /**
          * Clock font style
          * @hide
          */
