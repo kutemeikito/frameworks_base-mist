@@ -25,6 +25,9 @@ public class RisingServicesStarter {
     private static final String ADAPTIVE_SOUND_ENGINE_SERVICE_CLASS =
             "org.rising.server.AdaptiveSoundEngineService";
 
+    private static final String STORAGE_CLEANER_SERVICE_CLASS =
+            "org.rising.server.StorageCleanerService";
+
     public RisingServicesStarter(SystemServiceManager systemServiceManager) {
         this.mSystemServiceManager = systemServiceManager;
     }
