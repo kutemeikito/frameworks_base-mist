@@ -70,19 +70,14 @@ namespace android {
 using ui::DisplayMode;
 
 static const char OEM_BOOTANIMATION_FILE[] = "/oem/media/bootanimation.zip";
+static const char PRODUCT_BOOTANIMATION_DARK_FILE[] = "/product/media/bootanimation-dark.zip";
 static const char SYSTEM_BOOTANIMATION_FILE[] = "/system/media/bootanimation.zip";
 static const char APEX_BOOTANIMATION_FILE[] = "/apex/com.android.bootanimation/etc/bootanimation.zip";
 static const char OEM_SHUTDOWNANIMATION_FILE[] = "/oem/media/shutdownanimation.zip";
 static const char PRODUCT_SHUTDOWNANIMATION_FILE[] = "/product/media/shutdownanimation.zip";
 static const char SYSTEM_SHUTDOWNANIMATION_FILE[] = "/system/media/shutdownanimation.zip";
-
-static const char* const BOOT_ANIMATION_FILES[] = {
-    "/product/media/bootanimation.zip",
-    "/product/media/bootanimation_cyberpunk.zip",
-    "/product/media/bootanimation_google.zip",
-    "/product/media/bootanimation_google_monet.zip",
-    "/product/media/bootanimation_valorant.zip"
-};
+static const char DEFAULT_BOOTANIMATION_FILE[] = "/product/media/bootanimation.zip";
+static const char CUSTOM_BOOTANIMATION_FILE[] = "/data/misc/bootanim/bootanimation.zip";
 
 static constexpr const char* PRODUCT_USERSPACE_REBOOT_ANIMATION_FILE = "/product/media/userspace-reboot.zip";
 static constexpr const char* OEM_USERSPACE_REBOOT_ANIMATION_FILE = "/oem/media/userspace-reboot.zip";
@@ -232,11 +227,38 @@ BootAnimation::~BootAnimation() {
             elapsedRealtime());
 }
 
+bool isDirectoryAccessible(const char* path) {
+    struct stat info;
+    return (stat(path, &info) == 0 && (info.st_mode & S_IFDIR));
+}
+
+void waitForBootAnimDir() {
+    int64_t waitStartTime = elapsedRealtime();
+    const char* bootAnimPath = "/data/misc/bootanim/";
+    const int DIR_WAIT_SLEEP_MS = 100;
+    const int LOG_PER_RETRIES = 10;
+    int retry = 0;
+    while (!isDirectoryAccessible(bootAnimPath)) {
+        retry++;
+        if ((retry % LOG_PER_RETRIES) == 0) {
+            ALOGD("Waiting for %s to be accessible, waited for %" PRId64 " ms",
+                  bootAnimPath, elapsedRealtime() - waitStartTime);
+        }
+        usleep(DIR_WAIT_SLEEP_MS * 1000);
+    }
+
+    int64_t totalWaited = elapsedRealtime() - waitStartTime;
+    if (totalWaited > DIR_WAIT_SLEEP_MS) {
+        ALOGD("Waiting for %s took %" PRId64 " ms", bootAnimPath, totalWaited);
+    }
+}
+
 void BootAnimation::onFirstRef() {
     ATRACE_CALL();
     status_t err = mSession->linkToComposerDeath(this);
     SLOGE_IF(err, "linkToComposerDeath failed (%s) ", strerror(-err));
     if (err == NO_ERROR) {
+        waitForBootAnimDir();
         // Load the animation content -- this can be slow (eg 200ms)
         // called before waitForSurfaceFlinger() in main() to avoid wait
         ALOGD("%sAnimationPreloadTiming start time: %" PRId64 "ms",
@@ -574,7 +596,19 @@ status_t BootAnimation::readyToRun() {
 
     mMaxWidth = android::base::GetIntProperty("ro.surface_flinger.max_graphics_width", 0);
     mMaxHeight = android::base::GetIntProperty("ro.surface_flinger.max_graphics_height", 0);
-    ui::Size resolution = displayMode.resolution;
+
+    // check for overridden ui resolution
+    ui::Size resolution;
+    char *endptr;
+    std::string size_override = android::base::GetProperty("ro.config.size_override", "");
+
+    resolution.width = strtoimax(size_override.c_str(), &endptr, 10);
+    if (endptr[0] == ',')
+        resolution.height = strtoimax(endptr+1, NULL, 10);
+
+    if (resolution.width <= 0 || resolution.height <= 0)
+        resolution = displayMode.resolution;
+
     resolution = limitSurfaceSize(resolution.width, resolution.height);
     // create the native surface
     sp<SurfaceControl> control = session()->createSurface(String8("BootAnimation"),
@@ -593,6 +627,11 @@ status_t BootAnimation::readyToRun() {
         }
         t.setLayerStack(control, ui::DEFAULT_LAYER_STACK);
     }
+
+    // Scale forced resolution to physical resolution
+    Rect forcedRes(0, 0, resolution.width, resolution.height);
+    Rect physRes(0, 0, displayMode.resolution.width, displayMode.resolution.height);
+    t.setDisplayProjection(mDisplayToken, ui::ROTATION_0, forcedRes, physRes);
 
     t.setLayer(control, 0x40000000)
         .apply();
@@ -754,11 +793,8 @@ bool BootAnimation::findBootAnimationFileInternal(const std::vector<std::string>
 
 void BootAnimation::findBootAnimationFile() {
     ATRACE_CALL();
-    const int bootAnimStyle = android::base::GetIntProperty("persist.sys.bootanimation_style", 0);
-    const char* selectedBootAnimation = (bootAnimStyle >= 0 && bootAnimStyle < 5) ? BOOT_ANIMATION_FILES[bootAnimStyle] : BOOT_ANIMATION_FILES[0];
     static const std::vector<std::string> bootFiles = {
-        APEX_BOOTANIMATION_FILE, std::string(selectedBootAnimation),
-        OEM_BOOTANIMATION_FILE, SYSTEM_BOOTANIMATION_FILE
+        CUSTOM_BOOTANIMATION_FILE, DEFAULT_BOOTANIMATION_FILE
     };
     static const std::vector<std::string> shutdownFiles = {
         PRODUCT_SHUTDOWNANIMATION_FILE, OEM_SHUTDOWNANIMATION_FILE, SYSTEM_SHUTDOWNANIMATION_FILE, ""
